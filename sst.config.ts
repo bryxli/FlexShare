@@ -1,14 +1,14 @@
 import { SSTConfig } from "sst";
-import { API } from "./stacks/MyStack";
+import { Dynamo } from "./stacks/DynamoStack";
 
 export default {
-  config(_input) {
+  config() {
     return {
       name: "FlexShare",
       region: "us-east-1",
     };
   },
   stacks(app) {
-    app.stack(API);
-  }
+    app.stack(Dynamo);
+  },
 } satisfies SSTConfig;
