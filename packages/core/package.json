@@ -1,5 +1,5 @@
 {
-  "name": "@FlexShare/core",
+  "name": "@flex-share/core",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
   "devDependencies": {
     "vitest": "^3.1.1",
     "@types/node": "^22.14.0",
-    "sst": "^3.12.3"
+    "sst": "^2.48.2"
   },
   "dependencies": {
     "zod": "^3.24.2"

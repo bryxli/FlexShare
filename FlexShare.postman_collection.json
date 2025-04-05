@@ -1,0 +1,32 @@
+{
+  "info": {
+    "name": "FlexShare",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Dev",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://k8rzs27ael.execute-api.us-east-1.amazonaws.com",
+              "protocol": "https",
+              "host": [
+                "k8rzs27ael",
+                "execute-api",
+                "us-east-1",
+                "amazonaws",
+                "com"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
