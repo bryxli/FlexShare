@@ -1,6 +1,9 @@
 export * as User from "./user";
 
+import crypto from "crypto";
 import { z } from "zod";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
 
@@ -17,10 +20,29 @@ export async function register(event: APIGatewayProxyEventV2) {
 
   try {
     const parsed = JSON.parse(body);
-    const data = RegisterSchema.parse(parsed);
+    const schema = RegisterSchema.parse(parsed);
 
-    /* TODO: validate unique username, add to DynamoDB */
-    return data;
+    const client = new DynamoDBClient({});
+    const docClient = DynamoDBDocumentClient.from(client);
+
+    const user = {
+      user_id: crypto.randomUUID(),
+      username: schema.username,
+    };
+
+    const command = new PutCommand({
+      /* TODO: dev | prod */
+      TableName: "dev-FlexShare-users",
+      Item: user,
+    });
+
+    const res = await docClient.send(command);
+
+    if (res.$metadata.httpStatusCode === 200) {
+      return user;
+    } else {
+      throw new Error(`Error occured while registering: ${res}`);
+    }
   } catch (e: unknown) {
     if (e instanceof Error) {
       throw new Error(`Invalid JSON or validation error: ${e.message}`);
