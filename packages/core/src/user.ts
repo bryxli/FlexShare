@@ -1,12 +1,9 @@
 export * as User from "./user";
 
 import { z } from "zod";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import {
-  DynamoDBDocumentClient,
-  GetCommand,
-  PutCommand,
-} from "@aws-sdk/lib-dynamodb";
+
+import { checkUserExists, updateUser } from "./utils/dynamo";
+import { User } from "./utils/types";
 
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
 
@@ -25,32 +22,16 @@ export async function register(event: APIGatewayProxyEventV2) {
     const parsed = JSON.parse(body);
     const schema = RegisterSchema.parse(parsed);
 
-    const client = new DynamoDBClient({});
-    const docClient = DynamoDBDocumentClient.from(client);
-
-    const user = {
+    const user: User = {
       user_id: schema.username,
     };
 
-    const existing = await docClient.send(
-      new GetCommand({
-        /* TODO: dev | prod */
-        TableName: "dev-FlexShare-users",
-        Key: { user_id: schema.username },
-      }),
-    );
-
-    if (existing.Item) {
+    const userExists = await checkUserExists(user);
+    if (userExists) {
       throw new Error("Username already exists");
     }
 
-    const res = await docClient.send(
-      new PutCommand({
-        /* TODO: dev | prod */
-        TableName: "dev-FlexShare-users",
-        Item: user,
-      }),
-    );
+    const res = await updateUser(user);
 
     if (res.$metadata.httpStatusCode === 200) {
       return user;
