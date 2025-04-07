@@ -1,9 +1,12 @@
 export * as User from "./user";
 
-import crypto from "crypto";
 import { z } from "zod";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+} from "@aws-sdk/lib-dynamodb";
 
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
 
@@ -26,17 +29,28 @@ export async function register(event: APIGatewayProxyEventV2) {
     const docClient = DynamoDBDocumentClient.from(client);
 
     const user = {
-      user_id: crypto.randomUUID(),
-      username: schema.username,
+      user_id: schema.username,
     };
 
-    const command = new PutCommand({
-      /* TODO: dev | prod */
-      TableName: "dev-FlexShare-users",
-      Item: user,
-    });
+    const existing = await docClient.send(
+      new GetCommand({
+        /* TODO: dev | prod */
+        TableName: "dev-FlexShare-users",
+        Key: { user_id: schema.username },
+      }),
+    );
 
-    const res = await docClient.send(command);
+    if (existing.Item) {
+      throw new Error("Username already exists");
+    }
+
+    const res = await docClient.send(
+      new PutCommand({
+        /* TODO: dev | prod */
+        TableName: "dev-FlexShare-users",
+        Item: user,
+      }),
+    );
 
     if (res.$metadata.httpStatusCode === 200) {
       return user;
@@ -45,7 +59,7 @@ export async function register(event: APIGatewayProxyEventV2) {
     }
   } catch (e: unknown) {
     if (e instanceof Error) {
-      throw new Error(`Invalid JSON or validation error: ${e.message}`);
+      throw new Error(`Parsing / validation error: ${e.message}`);
     } else {
       throw new Error("Unknown error occurred during parsing/validation");
     }
