@@ -25,7 +25,7 @@ describe("register", () => {
     const user = await register(event);
 
     expect(user).toEqual(mockUser);
-    expect(mockCheckUserExists).toHaveBeenCalledWith(mockUser);
+    expect(mockCheckUserExists).toHaveBeenCalledWith(mockUser.user_id);
     expect(mockUpdateUser).toHaveBeenCalledWith(mockUser);
   });
 

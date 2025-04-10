@@ -1,11 +1,12 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
+  DeleteCommand,
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
 } from "@aws-sdk/lib-dynamodb";
 
-import { User } from "./types";
+import type { User } from "./types";
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -15,19 +16,19 @@ const docClient = DynamoDBDocumentClient.from(client);
  *
  * This function queries the `users` table for an item with the given `user_id`.
  *
- * @param user - A `User` object containing the `user_id` to search for.
- * @returns The result of the `GetCommand` operation.
+ * @param user_id - A `string` containing the `user_id` to search for.
+ * @returns The item retrieved from the `GetCommand`.
  */
-export async function getUser(user: User) {
+export async function getUser(user_id: string) {
   const res = await docClient.send(
     new GetCommand({
       /* TODO: dev | prod */
       TableName: "dev-FlexShare-users",
-      Key: { user_id: user.user_id },
+      Key: { user_id },
     }),
   );
 
-  return res;
+  return res.Item;
 }
 
 /**
@@ -36,13 +37,50 @@ export async function getUser(user: User) {
  * This function queries the `users` table for an item with the given `user_id`.
  * It returns a boolean indicating whether the user record exists.
  *
- * @param user - A `User` object containing the `user_id` to search for.
+ * @param user_id - A `string` containing the `user_id` to search for.
  * @returns `true` if the user exists, `false` otherwise.
  */
-export async function checkUserExists(user: User) {
-  const res = await getUser(user);
+export async function checkUserExists(user_id: string) {
+  const res = await getUser(user_id);
 
-  return Boolean(res.Item);
+  return Boolean(res);
+}
+
+/**
+ * Deletes a user record in the DynamoDB table.
+ *
+ * @param user_id - A `string` containing the `user_id` to delete.
+ * @returns The result of the `DeleteCommand` operation.
+ */
+export async function deleteUser(user_id: string) {
+  const res = await docClient.send(
+    new DeleteCommand({
+      /* TODO: dev | prod */
+      TableName: "dev-FlexShare-users",
+      Key: { user_id },
+    }),
+  );
+
+  return res;
+}
+
+/**
+ * Authenticates a user.
+ *
+ * @param user - A `User` object containing the authentication information.
+ * @returns the `User` object upon successful authentication.
+ * @throws Error if authentication fails.
+ */
+export async function authenticate(user: User) {
+  const res = await getUser(user.user_id);
+
+  /* TODO: authenticate using res and user */
+
+  if (!res) {
+    throw new Error("Invalid login");
+  }
+
+  return res;
 }
 
 /**

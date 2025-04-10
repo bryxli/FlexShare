@@ -1,15 +1,15 @@
 export * as User from "./user";
-
-import { z } from "zod";
-
-import { checkUserExists, getUser, updateUser } from "./utils/dynamo";
-import { User } from "./utils/types";
+import { UserSchema } from "./utils/types";
+import {
+  authenticate,
+  checkUserExists,
+  deleteUser,
+  getUser,
+  updateUser,
+} from "./utils/dynamo";
 
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
-
-const UserSchema = z.object({
-  user_id: z.string(),
-});
+import type { User } from "./utils/types";
 
 /**
  * Registers a new user.
@@ -33,7 +33,7 @@ export async function register(event: APIGatewayProxyEventV2) {
       user_id: schema.user_id,
     };
 
-    const userExists = await checkUserExists(user);
+    const userExists = await checkUserExists(user.user_id);
     if (userExists) {
       throw new Error("Username already exists");
     }
@@ -62,8 +62,34 @@ export async function register(event: APIGatewayProxyEventV2) {
  * @throws Error if login fails.
  */
 export async function login(event: APIGatewayProxyEventV2) {
-  /* TODO */
-  console.log(event);
+  const body = event.body;
+
+  if (!body) {
+    throw new Error("Missing request body");
+  }
+
+  try {
+    const parsed = JSON.parse(body);
+    const schema = UserSchema.parse(parsed);
+
+    const user: User = {
+      user_id: schema.user_id,
+    };
+
+    const res = await authenticate(user);
+
+    if (res && res.$metadata.httpStatusCode === 200) {
+      return user;
+    } else {
+      throw new Error(`Error occured while logging in: ${res}`);
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      throw new Error(`Error: ${e.message}`);
+    } else {
+      throw new Error("Unknown error occurred");
+    }
+  }
 }
 
 /**
@@ -88,9 +114,9 @@ export async function retrieveByUserId(event: APIGatewayProxyEventV2) {
       user_id: schema.user_id,
     };
 
-    const res = await getUser(user);
+    const res = await getUser(user.user_id);
 
-    if (res.$metadata.httpStatusCode === 200) {
+    if (res && res.$metadata.httpStatusCode === 200) {
       return user;
     } else {
       throw new Error(`Error occured while retrieving: ${res}`);
@@ -151,6 +177,32 @@ export async function updateByUserId(event: APIGatewayProxyEventV2) {
  * @throws Error if deletion fails.
  */
 export async function deleteByUserId(event: APIGatewayProxyEventV2) {
-  /* TODO */
-  console.log(event);
+  const body = event.body;
+
+  if (!body) {
+    throw new Error("Missing request body");
+  }
+
+  try {
+    const parsed = JSON.parse(body);
+    const schema = UserSchema.parse(parsed);
+
+    const user: User = {
+      user_id: schema.user_id,
+    };
+
+    const res = await deleteUser(user.user_id);
+
+    if (res.$metadata.httpStatusCode === 200) {
+      return user;
+    } else {
+      throw new Error(`Error occured while deleting: ${res}`);
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      throw new Error(`Error: ${e.message}`);
+    } else {
+      throw new Error("Unknown error occurred");
+    }
+  }
 }

@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { mockClient } from "aws-sdk-client-mock";
 import {
+  DeleteCommand,
+  DeleteCommandOutput,
   DynamoDBDocumentClient,
   GetCommand,
   GetCommandOutput,
@@ -8,22 +10,29 @@ import {
   PutCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 
-import { checkUserExists, getUser, updateUser } from "../../src/utils/dynamo";
+import {
+  authenticate,
+  checkUserExists,
+  deleteUser,
+  getUser,
+  updateUser,
+} from "../../src/utils/dynamo";
 
 const client = mockClient(DynamoDBDocumentClient);
 const mockUser = { user_id: "testid" };
 
 describe("getUser", () => {
-  it("should return the response upon succesful retrieval", async () => {
+  it("should return the item upon succesful retrieval", async () => {
     const getCommandOutput: GetCommandOutput = {
       $metadata: {},
+      Item: {},
     };
 
     client.on(GetCommand).callsFake(() => {
       return getCommandOutput;
     });
 
-    const result = await getUser(mockUser);
+    const result = await getUser(mockUser.user_id);
     expect(result).toBeDefined();
   });
 });
@@ -40,7 +49,7 @@ describe("checkUserExists", () => {
       };
     });
 
-    const result = await checkUserExists(mockUser);
+    const result = await checkUserExists(mockUser.user_id);
     expect(result).toBe(true);
   });
 
@@ -51,8 +60,56 @@ describe("checkUserExists", () => {
       };
     });
 
-    const result = await checkUserExists(mockUser);
+    const result = await checkUserExists(mockUser.user_id);
     expect(result).toBe(false);
+  });
+});
+
+describe("deleteUser", () => {
+  it("should return the response upon succesful retrieval", async () => {
+    const deleteCommandOutput: DeleteCommandOutput = {
+      $metadata: {},
+    };
+
+    client.on(DeleteCommand).callsFake(() => {
+      return deleteCommandOutput;
+    });
+
+    const result = await deleteUser(mockUser.user_id);
+    expect(result).toBeDefined();
+  });
+});
+
+describe("authenticate", () => {
+  it("should return the user upon successful authentication", async () => {
+    const getCommandOutput: GetCommandOutput = {
+      $metadata: {},
+      Item: {},
+    };
+
+    client.on(GetCommand).callsFake(() => {
+      return getCommandOutput;
+    });
+
+    const result = await authenticate(mockUser);
+    expect(result).toBeDefined();
+  });
+
+  it("should throw Error upon unsuccessful authentication", async () => {
+    const getCommandOutput: GetCommandOutput = {
+      $metadata: {},
+    };
+    const mockError = new Error("Invalid login");
+
+    client.on(GetCommand).callsFake(() => {
+      return getCommandOutput;
+    });
+
+    try {
+      await authenticate(mockUser);
+    } catch (e) {
+      expect(e).toStrictEqual(mockError);
+    }
   });
 });
 
