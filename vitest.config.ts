@@ -8,6 +8,7 @@ export default defineConfig({
       exclude: [
         "**/.sst/**",
         "**/test/**",
+        "**/stacks/**",
         "**/eslint.config.js",
         "**/sst.config.ts",
         "**/vitest.config.ts",
