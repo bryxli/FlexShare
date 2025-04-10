@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "sst dev",
     "build": "sst build",
+    "test": "vitest --coverage",
     "deploy": "sst deploy --stage prod",
     "deploy:dev": "sst deploy --stage dev",
     "remove": "sst remove",
@@ -16,6 +17,7 @@
   "devDependencies": {
     "@eslint/js": "^9.24.0",
     "@tsconfig/node18": "^18.2.4",
+    "@vitest/coverage-v8": "^3.1.1",
     "aws-cdk-lib": "2.142.1",
     "constructs": "10.3.0",
     "eslint": "^9.24.0",

@@ -8,9 +8,24 @@ import { User } from "./utils/types";
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
 
 const RegisterSchema = z.object({
-  username: z.string(),
+  user_id: z.string(),
 });
 
+/**
+ * Registers a new user by checking if the user exists and then creating
+ * or updating their record in the database.
+ *
+ * This function performs the following steps:
+ * 1. Parses the incoming request body.
+ * 2. Validates the body using the `RegisterSchema`.
+ * 3. Checks if the user already exists in the database.
+ * 4. If the user doesn't exist, updates the DynamoDB table with the new user.
+ * 5. Returns the user object if registration is successful or throws an error.
+ *
+ * @param event - The API Gateway event object containing the request body.
+ * @returns The user object if registration is successful.
+ * @throws Error if validation fails or if a user with the same `user_id` already exists.
+ */
 export async function register(event: APIGatewayProxyEventV2) {
   const body = event.body;
 
@@ -23,7 +38,7 @@ export async function register(event: APIGatewayProxyEventV2) {
     const schema = RegisterSchema.parse(parsed);
 
     const user: User = {
-      user_id: schema.username,
+      user_id: schema.user_id,
     };
 
     const userExists = await checkUserExists(user);
@@ -40,7 +55,7 @@ export async function register(event: APIGatewayProxyEventV2) {
     }
   } catch (e: unknown) {
     if (e instanceof Error) {
-      throw new Error(`Parsing / validation error: ${e.message}`);
+      throw new Error(`Parsing/validation error: ${e.message}`);
     } else {
       throw new Error("Unknown error occurred during parsing/validation");
     }
