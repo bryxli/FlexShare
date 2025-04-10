@@ -11,6 +11,26 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 /**
+ * Gets a user from the DynamoDB table.
+ *
+ * This function queries the `users` table for an item with the given `user_id`.
+ *
+ * @param user - A `User` object containing the `user_id` to search for.
+ * @returns The result of the `GetCommand` operation.
+ */
+export async function getUser(user: User) {
+  const res = await docClient.send(
+    new GetCommand({
+      /* TODO: dev | prod */
+      TableName: "dev-FlexShare-users",
+      Key: { user_id: user.user_id },
+    }),
+  );
+
+  return res;
+}
+
+/**
  * Checks if a user already exists in the DynamoDB table.
  *
  * This function queries the `users` table for an item with the given `user_id`.
@@ -20,15 +40,9 @@ const docClient = DynamoDBDocumentClient.from(client);
  * @returns `true` if the user exists, `false` otherwise.
  */
 export async function checkUserExists(user: User) {
-  const existing = await docClient.send(
-    new GetCommand({
-      /* TODO: dev | prod */
-      TableName: "dev-FlexShare-users",
-      Key: { user_id: user.user_id },
-    }),
-  );
+  const res = await getUser(user);
 
-  return Boolean(existing.Item);
+  return Boolean(res.Item);
 }
 
 /**

@@ -65,9 +65,7 @@ describe("register", () => {
       body: JSON.stringify({ _user_id: "testuser" }),
     } as APIGatewayProxyEventV2;
 
-    await expect(() => register(event)).rejects.toThrow(
-      /Parsing\/validation error.*/,
-    );
+    await expect(() => register(event)).rejects.toThrow(/Error.*/);
   });
 
   it("should throw an unknown error if a non-Error is thrown during parsing/validation", async () => {
@@ -81,7 +79,7 @@ describe("register", () => {
     } as APIGatewayProxyEventV2;
 
     await expect(() => register(event)).rejects.toThrow(
-      "Unknown error occurred during parsing/validation",
+      "Unknown error occurred",
     );
 
     JSON.parse = originalParse;

@@ -3,14 +3,30 @@ import { mockClient } from "aws-sdk-client-mock";
 import {
   DynamoDBDocumentClient,
   GetCommand,
+  GetCommandOutput,
   PutCommand,
   PutCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 
-import { checkUserExists, updateUser } from "../../src/utils/dynamo";
+import { checkUserExists, getUser, updateUser } from "../../src/utils/dynamo";
 
 const client = mockClient(DynamoDBDocumentClient);
 const mockUser = { user_id: "testid" };
+
+describe("getUser", () => {
+  it("should return the response upon succesful retrieval", async () => {
+    const getCommandOutput: GetCommandOutput = {
+      $metadata: {},
+    };
+
+    client.on(GetCommand).callsFake(() => {
+      return getCommandOutput;
+    });
+
+    const result = await getUser(mockUser);
+    expect(result).toBeDefined();
+  });
+});
 
 describe("checkUserExists", () => {
   beforeEach(() => {

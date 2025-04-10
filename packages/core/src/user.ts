@@ -2,12 +2,12 @@ export * as User from "./user";
 
 import { z } from "zod";
 
-import { checkUserExists, updateUser } from "./utils/dynamo";
+import { checkUserExists, getUser, updateUser } from "./utils/dynamo";
 import { User } from "./utils/types";
 
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
 
-const RegisterSchema = z.object({
+const UserSchema = z.object({
   user_id: z.string(),
 });
 
@@ -27,7 +27,7 @@ export async function register(event: APIGatewayProxyEventV2) {
 
   try {
     const parsed = JSON.parse(body);
-    const schema = RegisterSchema.parse(parsed);
+    const schema = UserSchema.parse(parsed);
 
     const user: User = {
       user_id: schema.user_id,
@@ -47,9 +47,9 @@ export async function register(event: APIGatewayProxyEventV2) {
     }
   } catch (e: unknown) {
     if (e instanceof Error) {
-      throw new Error(`Parsing/validation error: ${e.message}`);
+      throw new Error(`Error: ${e.message}`);
     } else {
-      throw new Error("Unknown error occurred during parsing/validation");
+      throw new Error("Unknown error occurred");
     }
   }
 }
@@ -74,8 +74,34 @@ export async function login(event: APIGatewayProxyEventV2) {
  * @throws Error if retrieval fails.
  */
 export async function retrieveByUserId(event: APIGatewayProxyEventV2) {
-  /* TODO */
-  console.log(event);
+  const body = event.body;
+
+  if (!body) {
+    throw new Error("Missing request body");
+  }
+
+  try {
+    const parsed = JSON.parse(body);
+    const schema = UserSchema.parse(parsed);
+
+    const user: User = {
+      user_id: schema.user_id,
+    };
+
+    const res = await getUser(user);
+
+    if (res.$metadata.httpStatusCode === 200) {
+      return user;
+    } else {
+      throw new Error(`Error occured while retrieving: ${res}`);
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      throw new Error(`Error: ${e.message}`);
+    } else {
+      throw new Error("Unknown error occurred");
+    }
+  }
 }
 
 /**
@@ -86,8 +112,35 @@ export async function retrieveByUserId(event: APIGatewayProxyEventV2) {
  * @throws Error if update fails.
  */
 export async function updateByUserId(event: APIGatewayProxyEventV2) {
-  /* TODO */
-  console.log(event);
+  const body = event.body;
+
+  if (!body) {
+    throw new Error("Missing request body");
+  }
+
+  try {
+    const parsed = JSON.parse(body);
+    const schema = UserSchema.parse(parsed);
+
+    const user: User = {
+      user_id: schema.user_id,
+      /* TODO: add other properties to update */
+    };
+
+    const res = await updateUser(user);
+
+    if (res.$metadata.httpStatusCode === 200) {
+      return user;
+    } else {
+      throw new Error(`Error occured while updating: ${res}`);
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      throw new Error(`Error: ${e.message}`);
+    } else {
+      throw new Error("Unknown error occurred");
+    }
+  }
 }
 
 /**
