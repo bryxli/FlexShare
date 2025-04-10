@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { APIGatewayProxyEventV2, Context } from "aws-lambda";
+import { User } from "@FlexShare/core/user";
+import { register } from "../../src/user";
 
 vi.mock("@FlexShare/core/user", () => ({
   User: {
@@ -7,14 +10,10 @@ vi.mock("@FlexShare/core/user", () => ({
   },
 }));
 
-import { User } from "@FlexShare/core/user";
-import { register } from "../src/user";
-import { APIGatewayProxyEventV2, Context } from "aws-lambda";
-
 const mockEvent: APIGatewayProxyEventV2 = {} as APIGatewayProxyEventV2;
 const mockContext: Context = {} as Context;
 
-describe("Register API", () => {
+describe("User register API", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
