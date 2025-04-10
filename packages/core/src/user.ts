@@ -12,15 +12,7 @@ const RegisterSchema = z.object({
 });
 
 /**
- * Registers a new user by checking if the user exists and then creating
- * or updating their record in the database.
- *
- * This function performs the following steps:
- * 1. Parses the incoming request body.
- * 2. Validates the body using the `RegisterSchema`.
- * 3. Checks if the user already exists in the database.
- * 4. If the user doesn't exist, updates the DynamoDB table with the new user.
- * 5. Returns the user object if registration is successful or throws an error.
+ * Registers a new user.
  *
  * @param event - The API Gateway event object containing the request body.
  * @returns The user object if registration is successful.
@@ -60,4 +52,52 @@ export async function register(event: APIGatewayProxyEventV2) {
       throw new Error("Unknown error occurred during parsing/validation");
     }
   }
+}
+
+/**
+ * Logs in a user.
+ *
+ * @param event - The API Gateway event object containing the login request.
+ * @returns The user object if login is successful.
+ * @throws Error if login fails.
+ */
+export async function login(event: APIGatewayProxyEventV2) {
+  /* TODO */
+  console.log(event);
+}
+
+/**
+ * Retrieves a user by their `user_id`.
+ *
+ * @param event - The API Gateway event object containing the `user_id` to retrieve.
+ * @returns The user object if retrieval is successful.
+ * @throws Error if retrieval fails.
+ */
+export async function retrieveByUserId(event: APIGatewayProxyEventV2) {
+  /* TODO */
+  console.log(event);
+}
+
+/**
+ * Updates a user by their `user_id`.
+ *
+ * @param event - The API Gateway event object containing the `user_id` and updates.
+ * @returns The user object if update is successful.
+ * @throws Error if update fails.
+ */
+export async function updateByUserId(event: APIGatewayProxyEventV2) {
+  /* TODO */
+  console.log(event);
+}
+
+/**
+ * Deletes a user by their `user_id`.
+ *
+ * @param event - The API Gateway event object containing the `user_id` to delete.
+ * @returns The user object if deletion is successful.
+ * @throws Error if deletion fails.
+ */
+export async function deleteByUserId(event: APIGatewayProxyEventV2) {
+  /* TODO */
+  console.log(event);
 }

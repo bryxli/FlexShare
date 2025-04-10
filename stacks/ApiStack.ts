@@ -40,19 +40,19 @@ export function API({ stack }: StackContext) {
        * @route GET /user/{id}
        * Retrieves a user by ID.
        */
-      "GET /user/{id}": "packages/functions/src/user.retrieve",
+      "GET /user/{id}": "packages/functions/src/user.retrieveByUserId",
 
       /**
        * @route PUT /user/{id}
        * Updates a user's profile or settings.
        */
-      "PUT /user/{id}": "packages/functions/src/user.update",
+      "PUT /user/{id}": "packages/functions/src/user.updateByUserId",
 
       /**
        * @route DELETE /user/{id}
        * Deletes a user account by ID.
        */
-      "DELETE /user/{id}": "packages/functions/src/user.delete",
+      "DELETE /user/{id}": "packages/functions/src/user.deleteByUserId",
     },
   });
 
