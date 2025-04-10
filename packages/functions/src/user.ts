@@ -19,7 +19,7 @@ export const register = ApiHandler(async (_evt) => {
     if (e instanceof Error) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: e.message ?? "Internal Server Error" }),
+        body: JSON.stringify({ error: e.message }),
       };
     } else {
       return {
@@ -48,7 +48,7 @@ export const login = ApiHandler(async (_evt) => {
     if (e instanceof Error) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: e.message ?? "Internal Server Error" }),
+        body: JSON.stringify({ error: e.message }),
       };
     } else {
       return {
@@ -77,7 +77,7 @@ export const retrieveByUserId = ApiHandler(async (_evt) => {
     if (e instanceof Error) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: e.message ?? "Internal Server Error" }),
+        body: JSON.stringify({ error: e.message }),
       };
     } else {
       return {
@@ -106,7 +106,7 @@ export const updateByUserId = ApiHandler(async (_evt) => {
     if (e instanceof Error) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: e.message ?? "Internal Server Error" }),
+        body: JSON.stringify({ error: e.message }),
       };
     } else {
       return {
@@ -135,7 +135,7 @@ export const deleteByUserId = ApiHandler(async (_evt) => {
     if (e instanceof Error) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: e.message ?? "Internal Server Error" }),
+        body: JSON.stringify({ error: e.message }),
       };
     } else {
       return {
