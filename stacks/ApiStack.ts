@@ -9,12 +9,12 @@ import { Dynamo } from "./DynamoStack";
  * @returns An object containing the API construct.
  */
 export function API({ stack }: StackContext) {
-  const { users } = use(Dynamo);
+  const { users, posts } = use(Dynamo);
   const api = new Api(stack, "api", {
     defaults: {
       function: {
         runtime: "nodejs20.x",
-        permissions: [users],
+        permissions: [users, posts],
       },
     },
     routes: {
