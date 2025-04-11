@@ -14,6 +14,12 @@ describe("deleteByUserId", () => {
   });
 
   it("should delete user object successfully", async () => {
+    mockDeleteUser.mockResolvedValue({
+      $metadata: {
+        httpStatusCode: 200,
+      },
+    });
+
     const event = {
       rawPath: "/test/testuser",
       body: JSON.stringify(mockUser),
