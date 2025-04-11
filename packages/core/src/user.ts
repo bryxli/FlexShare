@@ -41,7 +41,7 @@ export async function register(event: APIGatewayProxyEventV2) {
     const res = await updateUser(user);
 
     if (res.$metadata.httpStatusCode === 200) {
-      return user;
+      return (await getUser(user.user_id)).Item;
     } else {
       throw new Error(`Error occured while registering: ${res}`);
     }
@@ -79,7 +79,7 @@ export async function login(event: APIGatewayProxyEventV2) {
     const res = await authenticate(user);
 
     if (res && res.$metadata.httpStatusCode === 200) {
-      return user;
+      return res.Item;
     } else {
       throw new Error(`Error occured while logging in: ${res}`);
     }
@@ -100,24 +100,15 @@ export async function login(event: APIGatewayProxyEventV2) {
  * @throws Error if retrieval fails.
  */
 export async function retrieveByUserId(event: APIGatewayProxyEventV2) {
-  const body = event.body;
-
-  if (!body) {
-    throw new Error("Missing request body");
-  }
-
   try {
-    const parsed = JSON.parse(body);
-    const schema = UserSchema.parse(parsed);
+    const path = event.rawPath;
+    const parts = path.split("/");
+    const user_id = parts[2];
 
-    const user: User = {
-      user_id: schema.user_id,
-    };
-
-    const res = await getUser(user.user_id);
+    const res = await getUser(user_id);
 
     if (res && res.$metadata.httpStatusCode === 200) {
-      return user;
+      return res.Item;
     } else {
       throw new Error(`Error occured while retrieving: ${res}`);
     }
@@ -131,7 +122,7 @@ export async function retrieveByUserId(event: APIGatewayProxyEventV2) {
 }
 
 /**
- * Updates a user by their `user_id`.
+ * Updates a user.
  *
  * @param event - The API Gateway event object containing the `user_id` and updates.
  * @returns The user object if update is successful.
@@ -156,7 +147,7 @@ export async function updateByUserId(event: APIGatewayProxyEventV2) {
     const res = await updateUser(user);
 
     if (res.$metadata.httpStatusCode === 200) {
-      return user;
+      return (await getUser(user.user_id)).Item;
     } else {
       throw new Error(`Error occured while updating: ${res}`);
     }
@@ -173,28 +164,19 @@ export async function updateByUserId(event: APIGatewayProxyEventV2) {
  * Deletes a user by their `user_id`.
  *
  * @param event - The API Gateway event object containing the `user_id` to delete.
- * @returns The user object if deletion is successful.
+ * @returns The deletion result.
  * @throws Error if deletion fails.
  */
 export async function deleteByUserId(event: APIGatewayProxyEventV2) {
-  const body = event.body;
-
-  if (!body) {
-    throw new Error("Missing request body");
-  }
-
   try {
-    const parsed = JSON.parse(body);
-    const schema = UserSchema.parse(parsed);
+    const path = event.rawPath;
+    const parts = path.split("/");
+    const user_id = parts[2];
 
-    const user: User = {
-      user_id: schema.user_id,
-    };
+    const res = await deleteUser(user_id);
 
-    const res = await deleteUser(user.user_id);
-
-    if (res.$metadata.httpStatusCode === 200) {
-      return user;
+    if (res && res.$metadata.httpStatusCode === 200) {
+      return res;
     } else {
       throw new Error(`Error occured while deleting: ${res}`);
     }

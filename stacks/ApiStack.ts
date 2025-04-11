@@ -43,10 +43,10 @@ export function API({ stack }: StackContext) {
       "GET /user/{id}": "packages/functions/src/user.retrieveByUserId",
 
       /**
-       * @route PUT /user/{id}
+       * @route PUT /user
        * Updates a user's profile or settings.
        */
-      "PUT /user/{id}": "packages/functions/src/user.updateByUserId",
+      "PUT /user": "packages/functions/src/user.updateByUserId",
 
       /**
        * @route DELETE /user/{id}

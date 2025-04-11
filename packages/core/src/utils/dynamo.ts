@@ -17,7 +17,7 @@ const docClient = DynamoDBDocumentClient.from(client);
  * This function queries the `users` table for an item with the given `user_id`.
  *
  * @param user_id - A `string` containing the `user_id` to search for.
- * @returns The item retrieved from the `GetCommand`.
+ * @returns The result of the `GetCommand` operation.
  */
 export async function getUser(user_id: string) {
   const res = await docClient.send(
@@ -28,7 +28,7 @@ export async function getUser(user_id: string) {
     }),
   );
 
-  return res.Item;
+  return res;
 }
 
 /**
@@ -43,7 +43,7 @@ export async function getUser(user_id: string) {
 export async function checkUserExists(user_id: string) {
   const res = await getUser(user_id);
 
-  return Boolean(res);
+  return Boolean(res.Item);
 }
 
 /**
@@ -68,7 +68,7 @@ export async function deleteUser(user_id: string) {
  * Authenticates a user.
  *
  * @param user - A `User` object containing the authentication information.
- * @returns the `User` object upon successful authentication.
+ * @returns the result of `getUser`
  * @throws Error if authentication fails.
  */
 export async function authenticate(user: User) {
@@ -76,7 +76,7 @@ export async function authenticate(user: User) {
 
   /* TODO: authenticate using res and user */
 
-  if (!res) {
+  if (!(await checkUserExists(user.user_id))) {
     throw new Error("Invalid login");
   }
 

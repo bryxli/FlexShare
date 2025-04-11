@@ -7,6 +7,7 @@ import type { APIGatewayProxyEventV2 } from "aws-lambda";
 
 const mockCheckUserExists = vi.spyOn(dynamo, "checkUserExists");
 const mockUpdateUser = vi.spyOn(dynamo, "updateUser");
+const mockGetUser = vi.spyOn(dynamo, "getUser");
 const mockUser = { user_id: "testuser" };
 
 describe("register", () => {
@@ -17,6 +18,10 @@ describe("register", () => {
   it("should register a new user successfully", async () => {
     mockCheckUserExists.mockResolvedValue(false);
     mockUpdateUser.mockResolvedValue({ $metadata: { httpStatusCode: 200 } });
+    mockGetUser.mockResolvedValue({
+      Item: mockUser,
+      $metadata: {},
+    });
 
     const event = {
       body: JSON.stringify(mockUser),
