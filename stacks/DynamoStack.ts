@@ -17,5 +17,11 @@ export function Dynamo({ stack }: StackContext) {
     primaryIndex: { partitionKey: "user_id" },
   });
 
-  return { users };
+  const posts = new Table(stack, "posts", {
+    fields: {
+      post_id: "string",
+    },
+  });
+
+  return { users, posts };
 }

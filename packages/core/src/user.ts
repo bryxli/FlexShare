@@ -128,7 +128,7 @@ export async function retrieveByUserId(event: APIGatewayProxyEventV2) {
  * @returns The user object if update is successful.
  * @throws Error if update fails.
  */
-export async function updateByUserId(event: APIGatewayProxyEventV2) {
+export async function update(event: APIGatewayProxyEventV2) {
   const body = event.body;
 
   if (!body) {
@@ -141,6 +141,7 @@ export async function updateByUserId(event: APIGatewayProxyEventV2) {
 
     const user: User = {
       user_id: schema.user_id,
+      /* TODO: currently this overwrites the entire user object with only the user_id */
       /* TODO: add other properties to update */
     };
 

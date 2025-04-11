@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import { updateByUserId } from "../../src/user";
+import { update } from "../../src/user";
 import * as dynamo from "../../src/utils/dynamo";
 
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
@@ -9,7 +9,7 @@ const mockUpdateUser = vi.spyOn(dynamo, "updateUser");
 const mockGetUser = vi.spyOn(dynamo, "getUser");
 const mockUser = { user_id: "testuser" };
 
-describe("updateByUserId", () => {
+describe("update", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
@@ -32,7 +32,7 @@ describe("updateByUserId", () => {
       body: JSON.stringify(mockUser),
     } as APIGatewayProxyEventV2;
 
-    const user = await updateByUserId(event);
+    const user = await update(event);
 
     expect(user).toEqual(mockUser);
   });
@@ -40,9 +40,7 @@ describe("updateByUserId", () => {
   it("should throw an error if body is missing", async () => {
     const event = {} as APIGatewayProxyEventV2;
 
-    await expect(() => updateByUserId(event)).rejects.toThrow(
-      "Missing request body",
-    );
+    await expect(() => update(event)).rejects.toThrow("Missing request body");
   });
 
   it("should throw an error when update fails", async () => {
@@ -57,7 +55,7 @@ describe("updateByUserId", () => {
     } as APIGatewayProxyEventV2;
 
     try {
-      await updateByUserId(event);
+      await update(event);
     } catch (e: unknown) {
       if (e instanceof Error) {
         expect(e.message).toMatch(/Error occured while updating/);
@@ -77,9 +75,7 @@ describe("updateByUserId", () => {
       body: JSON.stringify(mockUser),
     } as APIGatewayProxyEventV2;
 
-    await expect(() => updateByUserId(event)).rejects.toThrow(
-      "Unknown error occurred",
-    );
+    await expect(() => update(event)).rejects.toThrow("Unknown error occurred");
 
     JSON.parse = originalParse;
   });

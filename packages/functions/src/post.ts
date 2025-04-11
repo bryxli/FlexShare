@@ -1,15 +1,15 @@
 import { ApiHandler } from "sst/node/api";
-import { User } from "@FlexShare/core/user";
+import { Post } from "@FlexShare/core/post";
 
 /**
- * User registration endpoint.
+ * Post creation endpoint.
  *
- * Calls the core `User.register` function and returns the result.
- * Returns a 500 error if registration fails.
+ * Calls the core `Post.create` function and returns the result.
+ * Returns a 500 error if post creation fails.
  */
-export const register = ApiHandler(async (_evt) => {
+export const create = ApiHandler(async (_evt) => {
   try {
-    const res = await User.register(_evt);
+    const res = await Post.create(_evt);
 
     return {
       statusCode: 200,
@@ -31,43 +31,14 @@ export const register = ApiHandler(async (_evt) => {
 });
 
 /**
- * User login endpoint.
+ * Post retrieval endpoint.
  *
- * Calls the core `User.login` function and returns the result.
- * Returns a 500 error if login fails.
- */
-export const login = ApiHandler(async (_evt) => {
-  try {
-    const res = await User.login(_evt);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(res),
-    };
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: e.message }),
-      };
-    } else {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Internal Server Error" }),
-      };
-    }
-  }
-});
-
-/**
- * User retrieval endpoint.
- *
- * Calls the core `User.retrieveByUserId` function and returns the result.
+ * Calls the core `Post.retrieveByPostId` function and returns the result.
  * Returns a 500 error if retrieve fails.
  */
-export const retrieveByUserId = ApiHandler(async (_evt) => {
+export const retrieveByPostId = ApiHandler(async (_evt) => {
   try {
-    const res = await User.retrieveByUserId(_evt);
+    const res = await Post.retrieveByPostId(_evt);
 
     return {
       statusCode: 200,
@@ -89,14 +60,14 @@ export const retrieveByUserId = ApiHandler(async (_evt) => {
 });
 
 /**
- * User update endpoint.
+ * Post update endpoint.
  *
- * Calls the core `User.update` function and returns the result.
- * Returns a 500 error if update fails.
+ * Calls the core `Post.update` function and returns the result.
+ * Returns a 500 error if post update fails.
  */
 export const update = ApiHandler(async (_evt) => {
   try {
-    const res = await User.update(_evt);
+    const res = await Post.update(_evt);
 
     return {
       statusCode: 200,
@@ -118,14 +89,14 @@ export const update = ApiHandler(async (_evt) => {
 });
 
 /**
- * User deletion endpoint.
+ * Post deletion endpoint.
  *
- * Calls the core `User.deleteByUserId` function and returns the result.
+ * Calls the core `Post.deleteByPostId` function and returns the result.
  * Returns a 500 error if delete fails.
  */
-export const deleteByUserId = ApiHandler(async (_evt) => {
+export const deleteByPostId = ApiHandler(async (_evt) => {
   try {
-    const res = await User.deleteByUserId(_evt);
+    const res = await Post.deleteByPostId(_evt);
 
     return {
       statusCode: 200,

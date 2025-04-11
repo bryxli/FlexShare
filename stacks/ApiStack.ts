@@ -46,13 +46,37 @@ export function API({ stack }: StackContext) {
        * @route PUT /user
        * Updates a user's profile or settings.
        */
-      "PUT /user": "packages/functions/src/user.updateByUserId",
+      "PUT /user": "packages/functions/src/user.update",
 
       /**
        * @route DELETE /user/{id}
        * Deletes a user account by ID.
        */
       "DELETE /user/{id}": "packages/functions/src/user.deleteByUserId",
+
+      /**
+       * @route POST /post/create
+       * Creates a new post.
+       */
+      "POST /post/create": "packages/functions/src/post.create",
+
+      /**
+       * @route GET /post/{id}
+       * Retrieves a post by ID.
+       */
+      "GET /post/{id}": "packages/functions/src/post.retrieveByPostId",
+
+      /**
+       * @route POST /post
+       * Updates an existing post.
+       */
+      "POST /post/update": "packages/functions/src/post.update",
+
+      /**
+       * @route DELETE /post/{id}
+       * Deletes a post by ID.
+       */
+      "DELETE /post/{id}": "packages/functions/src/user.deleteByPostId",
     },
   });
 
