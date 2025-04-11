@@ -21,6 +21,7 @@ export function Dynamo({ stack }: StackContext) {
     fields: {
       post_id: "string",
     },
+    primaryIndex: { partitionKey: "post_id" },
   });
 
   return { users, posts };
