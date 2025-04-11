@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import { register } from "../src/user";
-import * as dynamo from "../src/utils/dynamo";
+import { register } from "../../src/user";
+import * as dynamo from "../../src/utils/dynamo";
 
 import type { APIGatewayProxyEventV2 } from "aws-lambda";
 
