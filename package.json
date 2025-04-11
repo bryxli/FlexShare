@@ -1,12 +1,14 @@
 {
-  "name": "FlexShare",
+  "name": "flex-share",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "sst dev",
     "build": "sst build",
-    "deploy": "sst deploy",
+    "test": "vitest --coverage",
+    "deploy": "sst deploy --stage prod",
+    "deploy:dev": "sst deploy --stage dev",
     "remove": "sst remove",
     "console": "sst console",
     "typecheck": "tsc --noEmit",
@@ -15,6 +17,7 @@
   "devDependencies": {
     "@eslint/js": "^9.24.0",
     "@tsconfig/node18": "^18.2.4",
+    "@vitest/coverage-v8": "^3.1.1",
     "aws-cdk-lib": "2.142.1",
     "constructs": "10.3.0",
     "eslint": "^9.24.0",
@@ -22,7 +25,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
-    "sst": "^3.12.3",
+    "sst": "^2.48.2",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.29.0"
   },

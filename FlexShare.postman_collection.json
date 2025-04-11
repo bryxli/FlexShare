@@ -1,0 +1,168 @@
+{
+  "info": {
+    "name": "FlexShare",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Dev",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://k8rzs27ael.execute-api.us-east-1.amazonaws.com",
+              "protocol": "https",
+              "host": [
+                "k8rzs27ael",
+                "execute-api",
+                "us-east-1",
+                "amazonaws",
+                "com"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User - Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user_id\":\"testuser\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://k8rzs27ael.execute-api.us-east-1.amazonaws.com/user/register",
+              "protocol": "https",
+              "host": [
+                "k8rzs27ael",
+                "execute-api",
+                "us-east-1",
+                "amazonaws",
+                "com"
+              ],
+              "path": ["user", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User - Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user_id\":\"testuser\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://k8rzs27ael.execute-api.us-east-1.amazonaws.com/user/login",
+              "protocol": "https",
+              "host": [
+                "k8rzs27ael",
+                "execute-api",
+                "us-east-1",
+                "amazonaws",
+                "com"
+              ],
+              "path": ["user", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User - Retrieve",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://k8rzs27ael.execute-api.us-east-1.amazonaws.com/user/testuser",
+              "protocol": "https",
+              "host": [
+                "k8rzs27ael",
+                "execute-api",
+                "us-east-1",
+                "amazonaws",
+                "com"
+              ],
+              "path": ["user", "testuser"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User - Update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user_id\": \"testuser\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://k8rzs27ael.execute-api.us-east-1.amazonaws.com/user",
+              "protocol": "https",
+              "host": [
+                "k8rzs27ael",
+                "execute-api",
+                "us-east-1",
+                "amazonaws",
+                "com"
+              ],
+              "path": ["user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user_id\": \"testuser\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://k8rzs27ael.execute-api.us-east-1.amazonaws.com/testuser",
+              "protocol": "https",
+              "host": [
+                "k8rzs27ael",
+                "execute-api",
+                "us-east-1",
+                "amazonaws",
+                "com"
+              ],
+              "path": ["testuser"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
